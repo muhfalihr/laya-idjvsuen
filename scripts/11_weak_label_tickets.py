@@ -108,11 +108,17 @@ def main():
     p.add_argument("--out", default=os.path.join(PROC, "tickets_labeled.jsonl"))
     p.add_argument("--min-score", type=int, default=2)
     p.add_argument("--min-margin", type=int, default=2)
+    p.add_argument("--rare-boost", action="store_true",
+                   help="tambang pesan belum berlabel utk kelas langka dgn aturan rileks "
+                        "(skor>=1, margin>=1 vs kelas non-langka) - hanya utk TRAIN, "
+                        "ditandai boost=true; test tetap memakai aturan strict")
     args = p.parse_args()
 
+    RARE = ("security", "compliance", "platforms", "employee_support", "data_reporting")
     rows = [json.loads(l) for l in open(args.in_file, encoding="utf-8")]
     out, dist = [], Counter()
     per_lang = defaultdict(Counter)
+    strict_texts = set()
     for r in rows:
         s, hits = score(r["text"])
         if not s:
@@ -125,14 +131,36 @@ def main():
         out.append({"text": r["text"], "label": top, "score": top_sc,
                     "ticket_id": r["ticket_id"], "source": r["source"],
                     "lang_guess": r["lang_guess"], "hits": hits[top][:4]})
+        strict_texts.add(r["text"])
         dist[top] += 1
         per_lang[r["lang_guess"]][top] += 1
+
+    n_boost = 0
+    if args.rare_boost:
+        for r in rows:
+            if r["text"] in strict_texts:
+                continue
+            s, hits = score(r["text"])
+            rare = {k: v for k, v in s.items() if k in RARE}
+            if not rare:
+                continue
+            top, top_sc = max(rare.items(), key=lambda kv: kv[1])
+            other = max((v for k, v in s.items() if k not in RARE), default=0)
+            if top_sc >= 1 and (top_sc - other) >= 1:
+                out.append({"text": r["text"], "label": top, "score": top_sc,
+                            "ticket_id": r["ticket_id"], "source": r["source"],
+                            "lang_guess": r["lang_guess"], "hits": hits[top][:4],
+                            "boost": True})
+                dist[top] += 1
+                per_lang[r["lang_guess"]][top] += 1
+                n_boost += 1
 
     with open(args.out, "w", encoding="utf-8") as f:
         for r in out:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
-    print(f"berlabel: {len(out)}/{len(rows)} pesan ({len(out)/len(rows)*100:.1f}%)")
+    print(f"berlabel: {len(out)}/{len(rows)} pesan ({len(out)/len(rows)*100:.1f}%)"
+          + (f" [termasuk {n_boost} boost kelas langka]" if n_boost else ""))
     for lab, n in dist.most_common():
         print(f"  {lab:<22} {n:>6}  ({n/len(out)*100:.1f}%)")
     with open(os.path.join(PROC, "tickets_label_dist.json"), "w", encoding="utf-8") as f:

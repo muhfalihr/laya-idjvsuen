@@ -55,6 +55,10 @@ def main():
     p.add_argument("--replay", default=os.path.join(PROC, "train_items.pt"))
     p.add_argument("--service-cap", type=int, default=1200)
     p.add_argument("--replay-massive", type=int, default=10000)
+    p.add_argument("--rare-oversample", type=int, default=1,
+                   help="duplikasi item train kelas langka xN (security, compliance, "
+                        "platforms, employee_support, data_reporting)")
+    p.add_argument("--suffix", default="v2", help="akhiran nama file output (train_items_<suffix>.pt)")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
 
@@ -76,8 +80,10 @@ def main():
     print(f"{len(label_names)} kategori: {label_names}")
 
     rows = [json.loads(l) for l in open(args.labeled, encoding="utf-8")]
+    # test HANYA dari label strict (bukan boost) agar tetap comparable antar versi model
+    strict_rows = [r for r in rows if not r.get("boost")]
     train_rows = [r for r in rows if ticket_split(r["ticket_id"]) == "train"]
-    test_rows = [r for r in rows if ticket_split(r["ticket_id"]) == "test"]
+    test_rows = [r for r in strict_rows if ticket_split(r["ticket_id"]) == "test"]
     print(f"tickets split: train {len(train_rows)} pesan / test {len(test_rows)} pesan")
 
     rng = random.Random(args.seed)
@@ -101,6 +107,15 @@ def main():
         return out
 
     ticket_items = to_items(train_capped)
+    # oversample kelas langka: duplikasi item train (bukan test)
+    RARE = ("security", "compliance", "platforms", "employee_support", "data_reporting")
+    if args.rare_oversample > 1:
+        extra = []
+        for it in ticket_items:
+            if it["meta"]["gold"] in RARE:
+                extra.extend([it] * (args.rare_oversample - 1))
+        ticket_items.extend(extra)
+        print(f"oversample kelas langka x{args.rare_oversample}: +{len(extra)} duplikat")
     test_items = to_items(test_rows)
     print(f"items ticket: train {len(ticket_items)} (service di-cap {args.service_cap}) "
           f"/ test {len(test_items)}")
@@ -119,8 +134,9 @@ def main():
 
     train_all = ticket_items + replay_items
     rng.shuffle(train_all)
-    torch.save(train_all, os.path.join(PROC, "train_items_v2.pt"))
-    print(f"TOTAL train v2: {len(train_all)}")
+    train_name = f"train_items_{args.suffix}.pt"
+    torch.save(train_all, os.path.join(PROC, train_name))
+    print(f"TOTAL train {args.suffix}: {len(train_all)}")
 
     torch.save({"ticket_intent": {"task": "ticket_intent", "lang": "mix",
                                   "items": test_items, "label_names": label_names,
@@ -130,7 +146,7 @@ def main():
         json.dump({"seq_cfg": {"max_len": MAX_LEN, "head_max_len": HEAD_MAX_LEN},
                    "ticket_intent": {"instructions": INSTRUCTIONS, "criteria": crit}},
                   f, ensure_ascii=False, indent=2)
-    print("tersimpan: train_items_v2.pt, test_sets_tickets.pt, question_defs_v2.json")
+    print(f"tersimpan: {train_name}, test_sets_tickets.pt, question_defs_v2.json")
 
 
 if __name__ == "__main__":
