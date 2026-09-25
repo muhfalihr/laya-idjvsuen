@@ -53,6 +53,9 @@ python scripts/06_compare.py           # baseline vs results table
 python scripts/07_publish_hf.py --repo-id <user>/laya-idjvsuen-v1  # publish
 ```
 
+Stage 2 (optional) — internal ticket-domain adaptation (scripts 08-12, data pulled from
+internal databases via `secrets/db.ini`): see [docs/PIPELINE.en.md](docs/PIPELINE.en.md).
+
 ## Full documentation
 
 Everything detailed lives in [`docs/`](docs/), available in both languages (id + en):

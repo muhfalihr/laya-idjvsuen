@@ -30,7 +30,7 @@ pip install laya
 
 ```python
 import laya
-agent = laya.load("runs/laya-idjvsuen-v1")  # atau "<username-hf>/laya-idjvsuen-v1"
+agent = laya.load("runs/laya-idjvsuen-v1")  # atau "faall7479/laya-idjvsuen-v1"
 r = agent.predict("Pelayanane elek tenan, aku ora arep balik maneh", {
     "s": {"type": "choice", "instructions": "What is the sentiment of the text?",
           "criteria": {"negative": "negative opinion",
@@ -52,6 +52,9 @@ python scripts/05_eval.py --model runs/laya-idjvsuen-v1 --tag finetuned
 python scripts/06_compare.py           # tabel baseline vs hasil
 python scripts/07_publish_hf.py --repo-id <user>/laya-idjvsuen-v1  # publikasi
 ```
+
+Tahap 2 (opsional) — adaptasi domain tiket internal (skrip 08–12, data dari database
+internal via `secrets/db.ini`): lihat [docs/PIPELINE.md](docs/PIPELINE.md).
 
 ## Dokumentasi lengkap
 

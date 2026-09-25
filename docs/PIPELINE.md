@@ -40,8 +40,29 @@ typed-decisions di luar dua task ini belum diukur ulang (potensi forgetting — 
 | 2. (Opsional) Terjemahkan id→jv/sun | `scripts/02_translate_jav_sun.py` | `data/translated/massive-{jv,sun}.jsonl` (NLLB-600M) | ~20-40 menit |
 | 3. Bangun dataset typed-decisions | `scripts/03_build_dataset.py` | `data/processed/{train_items,test_sets}.pt` | ~2-5 menit |
 | 4. Evaluasi baseline | `scripts/05_eval.py --tag baseline` | `data/processed/eval_baseline.json` | ~5-15 menit |
-| 5. Training | `scripts/04_train.py` | `runs/laya-idjvsuen-v1/` | ~6-12 jam (3 epoch) |
+| 5. Training | `scripts/04_train.py` | `runs/laya-idjvsuen-v1/` | ~2 jam (3 epoch) |
 | 6. Evaluasi hasil | `scripts/05_eval.py --model runs/laya-idjvsuen-v1 --tag finetuned` | `eval_finetuned.json` | ~5-15 menit |
+| 7. Bandingkan | `scripts/06_compare.py` | `docs/HASIL-RETRAINING{,.en}.md` | detik |
+| 8. Publikasi HF | `scripts/07_publish_hf.py --repo-id <user>/...` | repo HuggingFace | menit |
+
+## Tahap 2 (opsional) — adaptasi domain tiket internal
+
+Adaptasi lanjutan pada data percakapan tiket dari dua database internal
+(PostgreSQL + MySQL; kredensial di `secrets/db.ini` yang di-gitignore):
+
+| Langkah | Skrip | Fungsi |
+|---|---|---|
+| 9. Ambil data | `scripts/08_fetch_tickets.py` | tarik tabel pesan tiket kedua DB → JSONL mentah |
+| 10. Preprocessing | `scripts/09_preprocess_tickets.py` | normalisasi, masking PII/secret, dedup, split user/handler, statistik bahasa |
+| 11. Evaluasi produksi | `scripts/10_eval_tickets.py` | uji model pada sampel pesan nyata |
+| 12. Weak labeling | `scripts/11_weak_label_tickets.py` | label otomatis 12 kategori domain (aturan kata kunci id+en) |
+| 13. Dataset v2 | `scripts/12_build_ticket_intent.py` | item 12-kategori + split per ticket + replay data v1 |
+| 14. Training v2 | `scripts/04_train.py --model runs/laya-idjvsuen-v1 --data data/processed/train_items_v2.pt --out runs/laya-idjvsuen-v2 --model-name ...` | ~30 menit |
+
+Kategori domain (12): Asset & Devices, Infrastructure, Platforms, Employee Support,
+Security, Compliance, Account & Identity, Data & Reporting, Networks & Connectivity,
+Application Issue, Service, Request Access. Catatan jujur: label tahap ini adalah
+*weak labels* (kata kunci, bukan anotasi manusia) — metriknya "weak-label accuracy".
 
 ### Menjalankan
 
@@ -79,7 +100,7 @@ menuliskan nilai ini sehingga evaluasi via `laya.load()` memakai budget yang sam
 
 **Evaluasi** — accuracy, macro-F1, ECE, mean confidence, coverage@0.8 per (task, bahasa);
 forward path identik jalur inference `Agent.predict` (temperatur dari config), tanpa Router
-( hardcoded load multilingual langsung — menghindari bug routing PR #286).
+(load checkpoint multilingual langsung — menghindari bug routing PR #286).
 
 ## Inferensi dengan model hasil training
 

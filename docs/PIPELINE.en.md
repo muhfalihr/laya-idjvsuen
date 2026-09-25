@@ -41,6 +41,27 @@ ability outside these two tasks was not re-measured (possible forgetting — see
 | 4. Baseline evaluation | `scripts/05_eval.py --tag baseline` | `data/processed/eval_baseline.json` | ~5-15 min |
 | 5. Training | `scripts/04_train.py` | `runs/laya-idjvsuen-v1/` | ~2 h (3 epochs) |
 | 6. Evaluate results | `scripts/05_eval.py --model runs/laya-idjvsuen-v1 --tag finetuned` | `eval_finetuned.json` | ~5-15 min |
+| 7. Compare | `scripts/06_compare.py` | `docs/HASIL-RETRAINING{,.en}.md` | seconds |
+| 8. Publish to HF | `scripts/07_publish_hf.py --repo-id <user>/...` | HuggingFace repo | minutes |
+
+## Stage 2 (optional) — internal ticket-domain adaptation
+
+Further adaptation on real ticket conversations from two internal databases
+(PostgreSQL + MySQL; credentials in the gitignored `secrets/db.ini`):
+
+| Step | Script | Purpose |
+|---|---|---|
+| 9. Fetch data | `scripts/08_fetch_tickets.py` | pull the ticket message table from both DBs into raw JSONL |
+| 10. Preprocess | `scripts/09_preprocess_tickets.py` | normalize, mask PII/secrets, dedup, user/handler split, language stats |
+| 11. Production eval | `scripts/10_eval_tickets.py` | test the model on real message samples |
+| 12. Weak labeling | `scripts/11_weak_label_tickets.py` | auto-label 12 domain categories (id+en keyword rules) |
+| 13. v2 dataset | `scripts/12_build_ticket_intent.py` | 12-category items + per-ticket split + v1 replay |
+| 14. v2 training | `scripts/04_train.py --model runs/laya-idjvsuen-v1 --data data/processed/train_items_v2.pt --out runs/laya-idjvsuen-v2 --model-name ...` | ~30 min |
+
+Domain categories (12): Asset & Devices, Infrastructure, Platforms, Employee Support,
+Security, Compliance, Account & Identity, Data & Reporting, Networks & Connectivity,
+Application Issue, Service, Request Access. Honest note: this stage's labels are
+*weak labels* (keywords, not human annotation) — the metric is "weak-label accuracy".
 
 ### Running
 
