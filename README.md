@@ -1,5 +1,7 @@
 # laya-idjvsuen
 
+**Bahasa**: **Indonesia** | [English](README.en.md)
+
 Fine-tune dari [ConvAI Innovations Laya](https://huggingface.co/convaiinnovations/laya-multilingual)
 (*decision model* non-generatif, Apache-2.0) agar kemampuan klasifikasi/keputusannya kuat
 untuk input **Bahasa Indonesia, Jawa, Sunda, Inggris, dan campurannya (code-switching)**.
@@ -53,9 +55,14 @@ python scripts/07_publish_hf.py --repo-id <user>/laya-idjvsuen-v1  # publikasi
 
 ## Dokumentasi lengkap
 
-Semua detail ada di [`docs/`](docs/): [riset mendalam](docs/RISET-LAYA.md) ·
-[dokumentasi pipeline](docs/PIPELINE.md) · [hasil & evaluasi](docs/HASIL-RETRAINING.md) ·
-[model card HuggingFace](docs/MODEL-CARD.md).
+Semua detail ada di [`docs/`](docs/), tersedia dalam dua bahasa (id + en):
+
+| Dokumen | Indonesia | English |
+|---|---|---|
+| Riset mendalam | [RISET-LAYA.md](docs/RISET-LAYA.md) | [RISET-LAYA.en.md](docs/RISET-LAYA.en.md) |
+| Dokumentasi pipeline | [PIPELINE.md](docs/PIPELINE.md) | [PIPELINE.en.md](docs/PIPELINE.en.md) |
+| Hasil & evaluasi | [HASIL-RETRAINING.md](docs/HASIL-RETRAINING.md) | [HASIL-RETRAINING.en.md](docs/HASIL-RETRAINING.en.md) |
+| Model card HuggingFace | [MODEL-CARD.md](docs/MODEL-CARD.md) | [MODEL-CARD.en.md](docs/MODEL-CARD.en.md) |
 
 ## Lisensi
 

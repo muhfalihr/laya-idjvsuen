@@ -1,5 +1,7 @@
 # Jalur A — Fine-tune Laya Multilingual untuk Bahasa Indonesia, Jawa, Sunda, Inggris
 
+**Bahasa**: **Indonesia** | [English](PIPELINE.en.md)
+
 Proyek ini me-retain **`laya-multilingual`** (decision model non-generatif, 322M, Apache-2.0)
 agar kemampuan *decision/classification*-nya kuat untuk input bahasa Indonesia (`id`),
 Jawa (`jv`), Sunda (`sun`), dan Inggris (`en`). Laporan riset lengkap: [RISET-LAYA.md](RISET-LAYA.md).

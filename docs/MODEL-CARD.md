@@ -22,6 +22,8 @@ metrics:
 
 # laya-idjvsuen-v1
 
+**Bahasa / Language**: **Indonesia** | [English](MODEL-CARD.en.md)
+
 **Fine-tune multibahasa dari [convaiinnovations/laya-multilingual](https://huggingface.co/convaiinnovations/laya-multilingual)**
 untuk pengambilan keputusan terkalibrasi (*typed decisions*: `choice` / `score` / `noul`)
 pada input **Bahasa Indonesia (id), Jawa (jv), Sunda (su), Inggris (en), dan campurannya**.

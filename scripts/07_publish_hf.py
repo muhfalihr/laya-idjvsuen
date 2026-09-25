@@ -1,10 +1,12 @@
 """Publish model + model card ke Hugging Face Hub.
 
 Prasyarat: sudah `hf auth login` (atau set env HF_TOKEN).
+Model card default bahasa Inggris (audiens internasional); `--lang id` untuk Indonesia.
 
 Penggunaan:
   python scripts/07_publish_hf.py --repo-id <username-anda>/laya-idjvsuen-v1
   python scripts/07_publish_hf.py --repo-id ... --private   # repo privat dulu
+  python scripts/07_publish_hf.py --repo-id ... --lang id   # card berbahasa Indonesia
 """
 import argparse
 import os
@@ -13,12 +15,16 @@ import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+CARDS = {"en": os.path.join(ROOT, "docs", "MODEL-CARD.en.md"),
+         "id": os.path.join(ROOT, "docs", "MODEL-CARD.md")}
+
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--repo-id", required=True, help="mis. username/laya-idjvsuen-v1")
     p.add_argument("--model-dir", default=os.path.join(ROOT, "runs", "laya-idjvsuen-v1"))
-    p.add_argument("--card", default=os.path.join(ROOT, "docs", "MODEL-CARD.md"))
+    p.add_argument("--lang", choices=["en", "id"], default="en",
+                   help="bahasa model card yang diunggah sebagai README repo (default: en)")
     p.add_argument("--private", action="store_true", help="buat repo privat (bisa diubah nanti)")
     args = p.parse_args()
 
@@ -43,14 +49,15 @@ def main():
     )
 
     # model card -> README.md repo, dengan placeholder repo-id diganti otomatis
-    card = open(args.card, encoding="utf-8").read()
+    card = open(CARDS[args.lang], encoding="utf-8").read()
     namespace = args.repo_id.split("/")[0]
     card = (card
             .replace("<repo-id-ini>", args.repo_id)
+            .replace("<this-repo-id>", args.repo_id)
             .replace("<user>/laya-idjvsuen", f"{namespace}/laya-idjvsuen"))
-    if "<nama-anda>" in card:
-        print("CATATAN: isi placeholder <nama-anda> di bagian sitasi (docs/MODEL-CARD.md) lalu "
-              "jalankan ulang skrip ini bila ingin nama Anda tercantum.")
+    if "<nama-anda>" in card or "<your-name>" in card:
+        print("CATATAN: isi placeholder <nama-anda>/<your-name> di bagian sitasi "
+              f"({CARDS[args.lang]}) lalu jalankan ulang skrip ini bila ingin nama Anda tercantum.")
     fd, tmp = tempfile.mkstemp(suffix=".md")
     with os.fdopen(fd, "w", encoding="utf-8") as f:
         f.write(card)

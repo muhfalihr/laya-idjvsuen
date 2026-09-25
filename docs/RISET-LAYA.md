@@ -1,5 +1,7 @@
 # Riset Mendalam: Model Laya & Jalur Retraining untuk Bahasa Indonesia, Bahasa Daerah, Inggris, dan Code-Switching
 
+**Bahasa**: **Indonesia** | [English](RISET-LAYA.en.md)
+
 > Disusun 24 September 2026. Semua klaim bersumber primer (HuggingFace, GitHub, arXiv, ACL Anthology) kecuali yang ditandai eksplisit "tidak terverifikasi". Riset oleh 2 agen riset paralel, dikonsolidasikan dalam dokumen ini.
 
 ---

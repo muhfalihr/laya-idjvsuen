@@ -1,5 +1,7 @@
 # Hasil Retraining Laya — Baseline vs Fine-tuned
 
+**Bahasa**: **Indonesia** | [English](HASIL-RETRAINING.en.md)
+
 - Baseline: `convaiinnovations/laya-multilingual`
 - Fine-tuned: `runs/laya-idjvsuen-v1`
 
