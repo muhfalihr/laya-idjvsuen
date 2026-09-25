@@ -13,3 +13,5 @@ hf-cache/
 logs/
 *.log
 *.txt.bak
+secrets/*
+!secrets/db.example.ini

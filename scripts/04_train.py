@@ -100,6 +100,8 @@ def main():
     p.add_argument("--warmup", type=int, default=60)
     p.add_argument("--amp", choices=["bf16", "fp16"], default="bf16")
     p.add_argument("--optim", choices=["adamw", "adamw8bit"], default="adamw")
+    p.add_argument("--model-name", default="laya-multilingual-idjvsuen-v1",
+                   help="nilai model_name yang ditulis ke config hasil training")
     p.add_argument("--calib-max", type=int, default=400)
     p.add_argument("--seed", type=int, default=20260922)
     p.add_argument("--resume", action="store_true")
@@ -115,7 +117,7 @@ def main():
     if device.type == "cpu":
         print("PERINGATAN: CUDA tidak tersedia - training di CPU akan sangat lambat.")
 
-    model_dir = local_snapshot(args.model, ROOT)
+    model_dir = args.model if os.path.isdir(args.model) else local_snapshot(args.model, ROOT)
     _fix_tokenizer_config(model_dir)
     with open(os.path.join(model_dir, "rl_agent_config.json")) as f:
         cfg = json.load(f)
@@ -304,10 +306,10 @@ def main():
     print("temperatur (choice, score, noul):", [round(t, 3) for t in fitted])
 
     cfg["fine_tuned"] = True
-    cfg["model_name"] = "laya-multilingual-idjvsuen-v1"
+    cfg["model_name"] = args.model_name
     cfg["temperature"] = fitted
     cfg.pop("temperature_by_options", None)
-    cfg["training"] = {"base": "convaiinnovations/laya-multilingual",
+    cfg["training"] = {"base": args.model,
                        "epochs": EPOCHS, "languages": ["id", "jv", "sun", "en"],
                        "tasks": ["intent (MASSIVE)", "sentiment (NusaX)"],
                        "finished_at": time.strftime("%Y-%m-%d %H:%M:%S")}
