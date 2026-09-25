@@ -1,9 +1,11 @@
-"""Benchmark model OpenRouter (mis. ~typesafe/jev-latest) pada test set laya.
+"""Benchmark model keputusan OpenRouter (mis. ~typesafe/jev-latest) pada test set laya.
 
-Prompt klasifikasi identik semantik dengan format pertanyaan laya (instructions +
-opsi "key: description"), jawaban dipaksa satu key opsi. Metrik: accuracy, macro-F1,
-parse-failure rate, latensi. Hasih disimpan format eval_* agar bisa dibandingkan
-dengan 06/14.
+Endpoint /api/alpha/decisions — skema permintaan kompatibel laya:
+  {model, state, questions: {qid: {type: "choice", instructions, criteria}}}
+Jawaban: answers.qid.{choice, probabilities, confidence}.
+
+Metrik: accuracy, macro-F1, ECE (dari probabilities), parse/API failure, latensi,
+total biaya (usage.cost). Output format eval_* agar bisa dibandingkan langsung.
 
 Prasyarat: env OPENROUTER_API_KEY.
 
@@ -14,15 +16,15 @@ Penggunaan:
 import argparse
 import json
 import os
-import re
 import time
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 
+import numpy as np
 import torch
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-API_URL = "https://openrouter.ai/api/v1/chat/completions"
+API_URL = "https://openrouter.ai/api/alpha/decisions"
 
 
 def macro_f1(y_true, y_pred, n_classes):
@@ -36,29 +38,20 @@ def macro_f1(y_true, y_pred, n_classes):
     return float(sum(f1s) / len(f1s)) if f1s else 0.0
 
 
-def build_prompt(state, instructions, criteria):
-    opts = "\n".join(f"- {k}: {d}" for k, d in criteria.items())
-    return (
-        f"{instructions}\n\n"
-        f"Options:\n{opts}\n\n"
-        f'Message: """{state}"""\n\n'
-        "Which single option fits the message best? "
-        "Reply with ONLY the option key, nothing else."
-    )
+def ece_score(conf, correct, bins=15):
+    conf, correct = np.asarray(conf), np.asarray(correct)
+    if len(conf) == 0:
+        return float("nan")
+    edges = np.linspace(0, 1, bins + 1)
+    e = 0.0
+    for i, (lo, hi) in enumerate(zip(edges[:-1], edges[1:])):
+        sel = (conf >= lo if i == 0 else conf > lo) & (conf <= hi)
+        if sel.any():
+            e += sel.mean() * abs(conf[sel].mean() - correct[sel].mean())
+    return float(e)
 
 
-def parse_key(text, keys):
-    t = text.strip().strip("`\"'.").lower()
-    if t in keys:
-        return t
-    # cocokkan key yang muncul sebagai kata utuh di jawaban
-    for k in keys:
-        if re.search(r"\b%s\b" % re.escape(k), t):
-            return k
-    return None
-
-
-def call_one(session, model_id, prompt, keys, max_retries=3):
+def call_one(session, model_id, state, instructions, criteria, max_retries=3):
     import requests
 
     headers = {
@@ -67,35 +60,38 @@ def call_one(session, model_id, prompt, keys, max_retries=3):
         "HTTP-Referer": "https://github.com/muhfalihr/laya-idjvsuen",
         "X-Title": "laya-idjvsuen benchmark",
     }
-    messages = [{"role": "user", "content": prompt}]
+    body = {
+        "model": model_id,
+        "state": state,
+        "questions": {"q": {"type": "choice", "instructions": instructions,
+                            "criteria": criteria}},
+    }
     for attempt in range(max_retries):
         t0 = time.time()
         try:
-            r = session.post(API_URL, headers=headers, timeout=120, json={
-                "model": model_id, "messages": messages, "temperature": 0,
-                "max_tokens": 512,
-            })
+            r = session.post(API_URL, headers=headers, timeout=120, json=body)
             dt = time.time() - t0
             if r.status_code == 429:
                 time.sleep(5 * (attempt + 1))
                 continue
             r.raise_for_status()
-            out = r.json()["choices"][0]["message"]["content"] or ""
-            key = parse_key(out, keys)
-            if key is None and attempt < max_retries - 1:
-                messages = messages + [
-                    {"role": "assistant", "content": out},
-                    {"role": "user", "content": "Invalid. Reply with ONLY one option key from the list."},
-                ]
-                continue
-            usage = r.json().get("usage", {})
-            return {"pred": key, "raw": out[:80], "latency": round(dt, 2),
-                    "tokens": usage.get("total_tokens")}
+            d = r.json()
+            a = d["answers"]["q"]
+            usage = d.get("usage", {})
+            return {"pred": a.get("choice"),
+                    "conf": a.get("confidence"),
+                    "resolved_model": d.get("model"),
+                    "latency": round(dt, 2),
+                    "cost": usage.get("cost", 0),
+                    "tokens": usage.get("input_tokens", 0) + usage.get("output_tokens", 0)}
         except Exception as e:
             if attempt == max_retries - 1:
-                return {"pred": None, "raw": "ERROR %s" % str(e)[:60], "latency": 0, "tokens": 0}
+                return {"pred": None, "conf": None, "resolved_model": None,
+                        "latency": 0, "cost": 0, "tokens": 0,
+                        "raw": str(e)[:100]}
             time.sleep(3 * (attempt + 1))
-    return {"pred": None, "raw": "unparsed", "latency": 0, "tokens": 0}
+    return {"pred": None, "conf": None, "resolved_model": None, "latency": 0,
+            "cost": 0, "tokens": 0}
 
 
 def main():
@@ -116,40 +112,43 @@ def main():
     ts = torch.load(args.test_sets, weights_only=False)[args.set]
     items = ts["items"][: args.n]
     keys = ts["label_names"]
-    criteria = ts["criteria"]
-    instr = ts["instructions"]
     print(f"{len(items)} sampel | {len(keys)} opsi | model {args.model_id}")
 
     session = requests.Session()
-    prompts = [build_prompt(it["state"], instr, criteria) for it in items]
     with ThreadPoolExecutor(max_workers=args.concurrency) as ex:
-        results = list(ex.map(lambda pr: call_one(session, args.model_id, pr, keys), prompts))
+        results = list(ex.map(
+            lambda it: call_one(session, args.model_id, it["state"],
+                                ts["instructions"], ts["criteria"]),
+            items))
 
     y_true = [it["label"] for it in items]
-    y_pred = [keys.index(r["pred"]) if r["pred"] else -1 for r in results]
+    y_pred = [keys.index(r["pred"]) if r["pred"] in keys else -1 for r in results]
     correct = [float(t == q) for t, q in zip(y_true, y_pred)]
-    acc = sum(correct) / len(correct)
-    parse_fail = sum(1 for r in results if r["pred"] is None)
+    confs = [r["conf"] if isinstance(r["conf"], (int, float)) else 0.5 for r in results]
+    fails = sum(1 for r in results if r["pred"] not in keys)
     lats = [r["latency"] for r in results if r["latency"] > 0]
-    toks = sum(r["tokens"] or 0 for r in results)
+    resolved = next((r["resolved_model"] for r in results if r["resolved_model"]), args.model_id)
 
     summary = {
-        "n": len(items), "accuracy": round(acc, 4),
+        "n": len(items), "accuracy": round(sum(correct) / len(correct), 4),
         "macro_f1": round(macro_f1(y_true, y_pred, len(keys)), 4),
-        "parse_fail": parse_fail,
+        "ece": round(ece_score(confs, correct), 4),
+        "api_fail": fails,
         "mean_latency_s": round(sum(lats) / len(lats), 2) if lats else 0,
-        "total_tokens": toks,
-        "per_label": dict(Counter(keys[i] for i in y_true)),
-        "model": args.model_id,
+        "total_tokens": sum(r["tokens"] for r in results),
+        "total_cost_usd": round(sum(r["cost"] for r in results), 6),
+        "model": args.model_id, "resolved_model": resolved,
     }
     out_json = os.path.join(ROOT, "data", "processed", f"eval_{args.tag}.json")
     with open(out_json, "w", encoding="utf-8") as f:
-        json.dump({args.set: summary, "_summary": {"model": args.model_id, "tag": args.tag}}, f, indent=2)
+        json.dump({args.set: summary,
+                   "_summary": {"model": resolved, "tag": args.tag}}, f, indent=2)
     dump = os.path.join(ROOT, "data", "processed", f"bench_{args.tag}_items.jsonl")
     with open(dump, "w", encoding="utf-8") as f:
         for it, r in zip(items, results):
             f.write(json.dumps({"text": it["state"], "gold": keys[it["label"]],
-                                "pred": r["pred"], "raw": r["raw"]}, ensure_ascii=False) + "\n")
+                                "pred": r["pred"], "conf": r["conf"]},
+                               ensure_ascii=False) + "\n")
     print(json.dumps(summary, indent=2, ensure_ascii=False))
     print(f"tersimpan: {out_json} + {dump}")
 

@@ -13,4 +13,8 @@ ALLOW = ["rl_agent_config.json", "model.safetensors", "tokenizer/*", "encoder/*"
 
 def local_snapshot(model_id: str, root: str) -> str:
     dest = os.path.join(root, "models", model_id.replace("/", "__"))
+    # cache lokal sudah lengkap -> pakai langsung tanpa hub call (menghindari
+    # validasi repo-id path Windows di huggingface_hub)
+    if os.path.exists(os.path.join(dest, "rl_agent_config.json")):
+        return dest
     return snapshot_download(model_id, local_dir=dest, allow_patterns=ALLOW)
