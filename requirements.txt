@@ -1,0 +1,12 @@
+torch>=2.7.0
+laya>=0.3.20
+transformers>=4.48.0
+datasets>=3.0.0
+safetensors
+huggingface_hub
+accelerate
+pandas
+scipy
+tabulate
+sentencepiece
+protobuf

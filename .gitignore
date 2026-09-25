@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Artefak besar (tidak di-commit; model di-publish ke HuggingFace)
+data/
+models/
+runs/
+hf-cache/
+
+# Log
+logs/
+*.log
+*.txt.bak
