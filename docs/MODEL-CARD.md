@@ -28,7 +28,7 @@ metrics:
 untuk pengambilan keputusan terkalibrasi (*typed decisions*: `choice` / `score` / `noul`)
 pada input **Bahasa Indonesia (id), Jawa (jv), Sunda (su), Inggris (en), dan campurannya**.
 
-**Penulis**: Muhammad Falih Romadhoni ([faall7479](https://huggingface.co/faall7479))
+**Penulis**: muhfalihr ([github.com/muhfalihr](https://github.com/muhfalihr))
 
 Ini adalah *decision model* non-autoregressive berbasis encoder (mmBERT-base, 322M parameter):
 satu forward pass menghasilkan jawaban terketik + probabilitas terkalibrasi. **Model ini tidak
@@ -144,7 +144,7 @@ Macro-F1 dan detail lengkap: [`HASIL-RETRAINING.md`](https://github.com/<user>/l
 ```bibtex
 @misc{laya-idjvsuen-v1,
   title  = {laya-idjvsuen-v1: multilingual Laya decision model fine-tuned for Indonesian, Javanese, Sundanese, English, and code-switching},
-  author = {Muhammad Falih Romadhoni},
+  author = {muhfalihr},
   year   = {2026},
   note   = {Fine-tune of convaiinnovations/laya-multilingual (Apache-2.0) on MASSIVE 1.1, NusaX-senti, and NLLB-generated translations},
   url    = {https://huggingface.co/<repo-id-ini>}
