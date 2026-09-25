@@ -115,6 +115,17 @@ Accuracy on the test sets (evaluated through the SDK inference path with shipped
 
 Macro-F1 and full details: [`HASIL-RETRAINING.en.md`](HASIL-RETRAINING.en.md) in the pipeline repo.
 
+### Benchmark vs Jev (OpenRouter) — ticket-domain 12 categories, identical 300 real samples
+
+![Overall benchmark](assets/bench_overall.png)
+
+![Per-category matrix](assets/bench_perclass.png)
+
+The latest domain fine-tune of this model family (`laya-idjvsuen-v3`) reaches 93.3% accuracy /
+ECE 0.015 on the identical samples, vs Jev 1.13 at 84.7% — running locally with zero API cost.
+Gold = weak labels; methodology and honest caveats: `BENCHMARK.en.md` in the
+[pipeline repo](https://github.com/muhfalihr/laya-idjvsuen).
+
 ## Limitations
 
 1. **Not a generative model** — it only answers caller-defined typed questions

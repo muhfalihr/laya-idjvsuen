@@ -22,6 +22,21 @@ untuk input **Bahasa Indonesia, Jawa, Sunda, Inggris, dan campurannya (code-swit
 
 ECE (kalibrasi) turun di semua test set. Model tersimpan di `runs/laya-idjvsuen-v1`.
 
+## Benchmark vs Jev (OpenRouter)
+
+Klasifikasi 12 kategori domain tiket internal, **300 sampel nyata identik** untuk semua peserta
+(gold = weak labels; metodologi: [docs/BENCHMARK.md](docs/BENCHMARK.md)):
+
+![Benchmark keseluruhan](docs/assets/bench_overall.png)
+
+![Matriks per-kategori](docs/assets/bench_perclass.png)
+
+![Kemampuan multibahasa sebelum vs sesudah fine-tune](docs/assets/bench_languages.png)
+
+Varian terbaru `laya-idjvsuen-v3` (fine-tune domain + penguatan kelas langka) mencapai
+**93,3% akurasi / ECE 0,015** pada sampel identik — mengungguli Jev 1.13 (84,7%) dan
+berjalan lokal tanpa biaya API.
+
 ## Penggunaan
 
 ```bash

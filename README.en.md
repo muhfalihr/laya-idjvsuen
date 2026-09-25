@@ -22,6 +22,21 @@ well on **Indonesian, Javanese, Sundanese, English, and mixed (code-switched) in
 
 ECE (calibration error) drops on every test set. The model lives in `runs/laya-idjvsuen-v1`.
 
+## Benchmark vs Jev (OpenRouter)
+
+12-category internal ticket-domain classification on **identical 300 real samples** for every
+participant (gold = weak labels; methodology: [docs/BENCHMARK.en.md](docs/BENCHMARK.en.md)):
+
+![Overall benchmark](docs/assets/bench_overall.png)
+
+![Per-category matrix](docs/assets/bench_perclass.png)
+
+![Multilingual capability before vs after fine-tuning](docs/assets/bench_languages.png)
+
+The latest variant `laya-idjvsuen-v3` (domain fine-tune + rare-class boost) reaches
+**93.3% accuracy / ECE 0.015** on the identical samples — beating Jev 1.13 (84.7%) while
+running locally with zero API cost.
+
 ## Usage
 
 ```bash

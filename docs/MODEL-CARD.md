@@ -113,7 +113,18 @@ Akurasi pada test set (evaluasi lewat jalur inference SDK, temperatur ship):
 | CS id+jv (sintetis) | 500 | 0,350 | **0,816** | 0,277 → 0,071 |
 | CS id+su (sintetis) | 500 | 0,342 | **0,852** | 0,234 → 0,065 |
 
-Macro-F1 dan detail lengkap: [`HASIL-RETRAINING.md`](https://github.com/<user>/laya-idjvsuen/blob/main/docs/HASIL-RETRAINING.md).
+Macro-F1 dan detail lengkap: [`HASIL-RETRAINING.md`](https://github.com/muhfalihr/laya-idjvsuen/blob/main/docs/HASIL-RETRAINING.md).
+
+### Benchmark vs Jev (OpenRouter) — 12 kategori domain tiket, 300 sampel nyata identik
+
+![Benchmark keseluruhan](assets/bench_overall.png)
+
+![Matriks per-kategori](assets/bench_perclass.png)
+
+Varian fine-tune domain terbaru dari keluarga model ini (`laya-idjvsuen-v3`) mencapai
+93,3% akurasi / ECE 0,015 pada sampel identik, vs Jev 1.13 sebesar 84,7% — berjalan lokal
+tanpa biaya API. Gold = weak labels; metodologi & catatan jujur: `BENCHMARK.md` di
+[repo pipeline](https://github.com/muhfalihr/laya-idjvsuen).
 
 ## Keterbatasan
 
