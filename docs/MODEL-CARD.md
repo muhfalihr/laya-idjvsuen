@@ -30,6 +30,11 @@ pada input **Bahasa Indonesia (id), Jawa (jv), Sunda (su), Inggris (en), dan cam
 
 **Penulis**: muhfalihr ([github.com/muhfalihr](https://github.com/muhfalihr))
 
+| Model | Fokus | Tautan |
+|---|---|---|
+| **laya-idjvsuen-v1** | multibahasa umum (repo ini) | repo ini |
+| laya-idjvsuen-v3 | v1 + 12 kategori tiket (disarankan untuk routing tiket) | [faall7479/laya-idjvsuen-v3](https://huggingface.co/faall7479/laya-idjvsuen-v3) |
+
 Ini adalah *decision model* non-autoregressive berbasis encoder (mmBERT-base, 322M parameter):
 satu forward pass menghasilkan jawaban terketik + probabilitas terkalibrasi. **Model ini tidak
 menghasilkan teks** dan bukan chatbot. Dibangun di atas karya [ConvAI Innovations](https://huggingface.co/convaiinnovations)
@@ -121,7 +126,8 @@ Macro-F1 dan detail lengkap: [`HASIL-RETRAINING.md`](https://github.com/muhfalih
 
 ![Matriks per-kategori](assets/bench_perclass.png)
 
-Varian fine-tune domain terbaru dari keluarga model ini (`laya-idjvsuen-v3`) mencapai
+Varian fine-tune domain terbaru dari keluarga model ini
+([laya-idjvsuen-v3](https://huggingface.co/faall7479/laya-idjvsuen-v3)) mencapai
 93,3% akurasi / ECE 0,015 pada sampel identik, vs Jev 1.13 sebesar 84,7% — berjalan lokal
 tanpa biaya API. Gold = weak labels; metodologi & catatan jujur: `BENCHMARK.md` di
 [repo pipeline](https://github.com/muhfalihr/laya-idjvsuen).

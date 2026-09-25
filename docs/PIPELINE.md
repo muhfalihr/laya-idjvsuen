@@ -6,7 +6,7 @@ Proyek ini me-retain **`laya-multilingual`** (decision model non-generatif, 322M
 agar kemampuan *decision/classification*-nya kuat untuk input bahasa Indonesia (`id`),
 Jawa (`jv`), Sunda (`sun`), dan Inggris (`en`). Laporan riset lengkap: [RISET-LAYA.md](RISET-LAYA.md).
 
-## ✅ Hasil (24 Sep 2026, model: `runs/laya-idjvsuen-v1`)
+## ✅ Hasil (24 Sep 2026, model: [faall7479/laya-idjvsuen-v1](https://huggingface.co/faall7479/laya-idjvsuen-v1), lokal `runs/laya-idjvsuen-v1`)
 
 Tabel lengkap: [HASIL-RETRAINING.md](HASIL-RETRAINING.md). Ringkasan akurasi:
 

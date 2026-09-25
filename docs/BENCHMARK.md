@@ -11,10 +11,15 @@ anotasi manusia).
 
 | Model | Akurasi | Macro-F1 | ECE | Latensi | Biaya |
 |---|---|---|---|---|---|
-| `laya-multilingual` (tanpa fine-tune) | 24,7% | 0,313 | 0,536 | lokal, ~ms | $0 |
-| `laya-idjvsuen-v1` (id/jv/su/en umum) | 44,7% | 0,354 | 0,117 | lokal, ~ms | $0 |
+| [`laya-multilingual`](https://huggingface.co/convaiinnovations/laya-multilingual) (tanpa fine-tune) | 24,7% | 0,313 | 0,536 | lokal, ~ms | $0 |
+| [`laya-idjvsuen-v1`](https://huggingface.co/faall7479/laya-idjvsuen-v1) (id/jv/su/en umum) | 44,7% | 0,354 | 0,117 | lokal, ~ms | $0 |
 | Jev 1.13 (`~typesafe/jev-latest`, OpenRouter) | 84,7% | 0,564 | 0,083 | 0,32 s (API) | $0,0093 |
-| **`laya-idjvsuen-v2`** (fine-tune domain) | **96,0%** | **0,752** | **0,030** | lokal, ~ms | $0 |
+| `laya-idjvsuen-v2` (fine-tune domain; digantikan v3, tidak dipublish) | **96,0%** | **0,752** | 0,030 | lokal, ~ms | $0 |
+| [`laya-idjvsuen-v3`](https://huggingface.co/faall7479/laya-idjvsuen-v3) (domain + kelas langka) | **93,3%** | 0,680 | **0,015** | lokal, ~ms | $0 |
+
+v2 unggul 2,7 poin akurasi keseluruhan tetapi lemah di kelas langka; v3 dipilih sebagai
+rilisan karena seimbang per-kelas (macro per-kelas 0,830 → 0,886, ECE terbaik) — lihat
+detail di laporan v3.
 
 Test penuh 1.126 item: v2 = 95,2% akurasi / 0,787 macro-F1 / ECE 0,024.
 

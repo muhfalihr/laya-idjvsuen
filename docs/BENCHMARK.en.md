@@ -11,10 +11,15 @@ human annotation).
 
 | Model | Accuracy | Macro-F1 | ECE | Latency | Cost |
 |---|---|---|---|---|---|
-| `laya-multilingual` (no fine-tune) | 24.7% | 0.313 | 0.536 | local, ~ms | $0 |
-| `laya-idjvsuen-v1` (general id/jv/su/en) | 44.7% | 0.354 | 0.117 | local, ~ms | $0 |
+| [`laya-multilingual`](https://huggingface.co/convaiinnovations/laya-multilingual) (no fine-tune) | 24.7% | 0.313 | 0.536 | local, ~ms | $0 |
+| [`laya-idjvsuen-v1`](https://huggingface.co/faall7479/laya-idjvsuen-v1) (general id/jv/su/en) | 44.7% | 0.354 | 0.117 | local, ~ms | $0 |
 | Jev 1.13 (`~typesafe/jev-latest`, OpenRouter) | 84.7% | 0.564 | 0.083 | 0.32 s (API) | $0.0093 |
-| **`laya-idjvsuen-v2`** (domain fine-tune) | **96.0%** | **0.752** | **0.030** | local, ~ms | $0 |
+| `laya-idjvsuen-v2` (domain fine-tune; superseded by v3, not published) | **96.0%** | **0.752** | 0.030 | local, ~ms | $0 |
+| [`laya-idjvsuen-v3`](https://huggingface.co/faall7479/laya-idjvsuen-v3) (domain + rare-class boost) | **93.3%** | 0.680 | **0.015** | local, ~ms | $0 |
+
+v2 leads overall accuracy by 2.7 points but is weak on rare classes; v3 is the released
+model because it is balanced per-class (macro per-class 0.830 → 0.886, best ECE) — see the
+v3 report for details.
 
 Full 1,126-item test: v2 = 95.2% accuracy / 0.787 macro-F1 / ECE 0.024.
 

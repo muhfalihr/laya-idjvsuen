@@ -30,6 +30,11 @@ Sundanese (su), English (en), and code-switched** input.
 
 **Author**: muhfalihr ([github.com/muhfalihr](https://github.com/muhfalihr))
 
+| Model | Focus | Link |
+|---|---|---|
+| **laya-idjvsuen-v1** | general multilingual (this repo) | this repo |
+| laya-idjvsuen-v3 | v1 + 12-category ticket domain (recommended for ticket routing) | [faall7479/laya-idjvsuen-v3](https://huggingface.co/faall7479/laya-idjvsuen-v3) |
+
 This is a non-autoregressive encoder-based decision model (mmBERT-base, 322M parameters):
 a single forward pass returns a typed answer plus a calibrated probability. **The model never
 generates text** and is not a chatbot. It builds on the work of [ConvAI Innovations](https://huggingface.co/convaiinnovations)
@@ -121,7 +126,8 @@ Macro-F1 and full details: [`HASIL-RETRAINING.en.md`](HASIL-RETRAINING.en.md) in
 
 ![Per-category matrix](assets/bench_perclass.png)
 
-The latest domain fine-tune of this model family (`laya-idjvsuen-v3`) reaches 93.3% accuracy /
+The latest domain fine-tune of this model family
+([laya-idjvsuen-v3](https://huggingface.co/faall7479/laya-idjvsuen-v3)) reaches 93.3% accuracy /
 ECE 0.015 on the identical samples, vs Jev 1.13 at 84.7% — running locally with zero API cost.
 Gold = weak labels; methodology and honest caveats: `BENCHMARK.en.md` in the
 [pipeline repo](https://github.com/muhfalihr/laya-idjvsuen).

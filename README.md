@@ -11,6 +11,16 @@ untuk input **Bahasa Indonesia, Jawa, Sunda, Inggris, dan campurannya (code-swit
 > SDK & kode upstream: [NandhaKishorM/laya](https://github.com/NandhaKishorM/laya) (tidak
 > disertakan di repo ini, `pip install laya`).
 
+## Versi model
+
+| Versi | Fokus | HuggingFace | Lokal |
+|---|---|---|---|
+| **v1** | multibahasa umum: intent MASSIVE 60-kelas + sentimen NusaX (id/jv/su/en + CS) | [faall7479/laya-idjvsuen-v1](https://huggingface.co/faall7479/laya-idjvsuen-v1) | `runs/laya-idjvsuen-v1` |
+| v2 | v1 + domain tiket versi awal (digantikan v3; tidak dipublish) | — | `runs/laya-idjvsuen-v2` |
+| **v3** | v1 + domain tiket 12 kategori (kelas langka dikuatkan) — **disarankan untuk routing tiket** | [faall7479/laya-idjvsuen-v3](https://huggingface.co/faall7479/laya-idjvsuen-v3) | `runs/laya-idjvsuen-v3` |
+
+*Konvensi: setiap ada versi model baru, tabel ini dan dokumentasi di `docs/` diperbarui.*
+
 ## Hasil (akurasi, baseline → fine-tuned)
 
 | Tugas | Baseline | Hasil |
@@ -20,7 +30,7 @@ untuk input **Bahasa Indonesia, Jawa, Sunda, Inggris, dan campurannya (code-swit
 | Sentimen — id / jv / su / en (NusaX) | 41–74% | **76–87%** |
 | Code-switch id+en / id+jv / id+su (sintetis) | 34–38% | **82–85%** |
 
-ECE (kalibrasi) turun di semua test set. Model tersimpan di `runs/laya-idjvsuen-v1`.
+ECE (kalibrasi) turun di semua test set. Model: [faall7479/laya-idjvsuen-v1](https://huggingface.co/faall7479/laya-idjvsuen-v1).
 
 ## Benchmark vs Jev (OpenRouter)
 
@@ -45,7 +55,7 @@ pip install laya
 
 ```python
 import laya
-agent = laya.load("runs/laya-idjvsuen-v1")  # atau "faall7479/laya-idjvsuen-v1"
+agent = laya.load("faall7479/laya-idjvsuen-v1")  # atau "faall7479/laya-idjvsuen-v3" (domain tiket)
 r = agent.predict("Pelayanane elek tenan, aku ora arep balik maneh", {
     "s": {"type": "choice", "instructions": "What is the sentiment of the text?",
           "criteria": {"negative": "negative opinion",
@@ -65,7 +75,7 @@ python scripts/05_eval.py --tag baseline
 python scripts/04_train.py             # RLCD + CE, ~2 jam di GPU 8 GB
 python scripts/05_eval.py --model runs/laya-idjvsuen-v1 --tag finetuned
 python scripts/06_compare.py           # tabel baseline vs hasil
-python scripts/07_publish_hf.py --repo-id <user>/laya-idjvsuen-v1  # publikasi
+python scripts/07_publish_hf.py --repo-id faall7479/laya-idjvsuen-v3  # publikasi (contoh konkret)
 ```
 
 Tahap 2 (opsional) — adaptasi domain tiket internal (skrip 08–12, data dari database

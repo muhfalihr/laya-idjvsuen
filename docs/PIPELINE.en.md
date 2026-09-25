@@ -6,7 +6,7 @@ This project retrains **`laya-multilingual`** (non-generative decision model, 32
 so its *decision/classification* capability is strong on Indonesian (`id`), Javanese (`jv`),
 Sundanese (`su`), and English (`en`) input. Full research report: [RISET-LAYA.en.md](RISET-LAYA.en.md).
 
-## ✅ Results (Sep 24, 2026, model: `runs/laya-idjvsuen-v1`)
+## ✅ Results (Sep 24, 2026, model: [faall7479/laya-idjvsuen-v1](https://huggingface.co/faall7479/laya-idjvsuen-v1), local `runs/laya-idjvsuen-v1`)
 
 Full tables: [HASIL-RETRAINING.en.md](HASIL-RETRAINING.en.md). Accuracy summary:
 

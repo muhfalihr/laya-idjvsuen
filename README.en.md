@@ -11,6 +11,16 @@ well on **Indonesian, Javanese, Sundanese, English, and mixed (code-switched) in
 > Upstream SDK & code: [NandhaKishorM/laya](https://github.com/NandhaKishorM/laya) (not vendored
 > in this repo; `pip install laya`).
 
+## Model versions
+
+| Version | Focus | HuggingFace | Local |
+|---|---|---|---|
+| **v1** | general multilingual: MASSIVE 60-class intent + NusaX sentiment (id/jv/su/en + CS) | [faall7479/laya-idjvsuen-v1](https://huggingface.co/faall7479/laya-idjvsuen-v1) | `runs/laya-idjvsuen-v1` |
+| v2 | v1 + early ticket-domain version (superseded by v3; not published) | — | `runs/laya-idjvsuen-v2` |
+| **v3** | v1 + 12-category ticket domain (rare-class boosted) — **recommended for ticket routing** | [faall7479/laya-idjvsuen-v3](https://huggingface.co/faall7479/laya-idjvsuen-v3) | `runs/laya-idjvsuen-v3` |
+
+*Convention: whenever a new model version is produced, this table and the `docs/` documentation are updated.*
+
 ## Results (accuracy, baseline → fine-tuned)
 
 | Task | Baseline | Result |
@@ -20,7 +30,7 @@ well on **Indonesian, Javanese, Sundanese, English, and mixed (code-switched) in
 | Sentiment — id / jv / su / en (NusaX) | 41–74% | **76–87%** |
 | Code-switch id+en / id+jv / id+su (synthetic) | 34–38% | **82–85%** |
 
-ECE (calibration error) drops on every test set. The model lives in `runs/laya-idjvsuen-v1`.
+ECE (calibration error) drops on every test set. Model: [faall7479/laya-idjvsuen-v1](https://huggingface.co/faall7479/laya-idjvsuen-v1).
 
 ## Benchmark vs Jev (OpenRouter)
 
@@ -45,7 +55,7 @@ pip install laya
 
 ```python
 import laya
-agent = laya.load("runs/laya-idjvsuen-v1")  # or "<hf-username>/laya-idjvsuen-v1"
+agent = laya.load("faall7479/laya-idjvsuen-v1")  # or "faall7479/laya-idjvsuen-v3" (ticket domain)
 r = agent.predict("Pelayanane elek tenan, aku ora arep balik maneh", {
     "s": {"type": "choice", "instructions": "What is the sentiment of the text?",
           "criteria": {"negative": "negative opinion",
@@ -65,7 +75,7 @@ python scripts/05_eval.py --tag baseline
 python scripts/04_train.py             # RLCD + CE, ~2 h on an 8 GB GPU
 python scripts/05_eval.py --model runs/laya-idjvsuen-v1 --tag finetuned
 python scripts/06_compare.py           # baseline vs results table
-python scripts/07_publish_hf.py --repo-id <user>/laya-idjvsuen-v1  # publish
+python scripts/07_publish_hf.py --repo-id faall7479/laya-idjvsuen-v3  # publish (concrete example)
 ```
 
 Stage 2 (optional) — internal ticket-domain adaptation (scripts 08-12, data pulled from

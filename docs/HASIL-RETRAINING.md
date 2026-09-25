@@ -3,7 +3,7 @@
 **Bahasa**: **Indonesia** | [English](HASIL-RETRAINING.en.md)
 
 - Baseline: `convaiinnovations/laya-multilingual`
-- Fine-tuned: `runs/laya-idjvsuen-v1`
+- Fine-tuned: `faall7479/laya-idjvsuen-v1`
 
 | Test set | n | Akurasi base | Akurasi FT | Δ | ECE base | ECE FT |
 |---|---|---|---|---|---|---|

@@ -53,9 +53,15 @@ T = {
 
 def build(base, ft, lang, idx):
     t = T[lang]
+    # map path lokal run -> repo HuggingFace untuk label dokumen
+    hf_map = {"runs/laya-idjvsuen-v1": "faall7479/laya-idjvsuen-v1",
+              "runs\\laya-idjvsuen-v1": "faall7479/laya-idjvsuen-v1",
+              "runs/laya-idjvsuen-v3": "faall7479/laya-idjvsuen-v3",
+              "runs\\laya-idjvsuen-v3": "faall7479/laya-idjvsuen-v3"}
+    ft_model = ft.get("_summary", {}).get("model", "faall7479/laya-idjvsuen-v1")
     lines = [t["title"], "", t["lang_switch"], "",
              f"- {t['base']}: `{base.get('_summary', {}).get('model', 'laya-multilingual')}`",
-             f"- {t['ft']}: `{ft.get('_summary', {}).get('model', 'runs/laya-idjvsuen-v1')}`",
+             f"- {t['ft']}: `{hf_map.get(ft_model, ft_model)}`",
              "", t["cols"][0], t["cols"][1]]
     for name in SET_ORDER:
         if name not in base or name not in ft:
