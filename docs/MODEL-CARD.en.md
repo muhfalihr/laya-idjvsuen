@@ -28,6 +28,8 @@ A **multilingual fine-tune of [convaiinnovations/laya-multilingual](https://hugg
 for calibrated typed decisions (`choice` / `score` / `noul`) on **Indonesian (id), Javanese (jv),
 Sundanese (su), English (en), and code-switched** input.
 
+**Author**: Muhammad Falih Romadhoni ([faall7479](https://huggingface.co/faall7479))
+
 This is a non-autoregressive encoder-based decision model (mmBERT-base, 322M parameters):
 a single forward pass returns a typed answer plus a calibrated probability. **The model never
 generates text** and is not a chatbot. It builds on the work of [ConvAI Innovations](https://huggingface.co/convaiinnovations)
@@ -144,7 +146,7 @@ Macro-F1 and full details: [`HASIL-RETRAINING.en.md`](HASIL-RETRAINING.en.md) in
 ```bibtex
 @misc{laya-idjvsuen-v1,
   title  = {laya-idjvsuen-v1: multilingual Laya decision model fine-tuned for Indonesian, Javanese, Sundanese, English, and code-switching},
-  author = {<your-name>},
+  author = {Muhammad Falih Romadhoni},
   year   = {2026},
   note   = {Fine-tune of convaiinnovations/laya-multilingual (Apache-2.0) on MASSIVE 1.1, NusaX-senti, and NLLB-generated translations},
   url    = {https://huggingface.co/<this-repo-id>}
