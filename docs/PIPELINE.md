@@ -125,3 +125,37 @@ r = agent.predict("Waktune sindur enak banget", {
   encoder `jhu-clsp/mmBERT-base`).
 - VRAM: full fine-tune 322M ≈ 6-6,5 GB (fp32 master + AdamW + aktivasi bf16 grad-ckpt).
   Bila OOM: `--micro-batch 4` atau `--optim adamw8bit`.
+
+## Tahap 3 (opsional) — Generalisasi v4: fine-tune dari v1 di luar domain tiket
+
+Memperluas kemampuan **umum** model (bukan menggantikan v3 untuk routing tiket), tetap
+berbasis replay agar kemampuan MASSIVE/NusaX/code-switch v1 tidak dilupakan:
+
+- **SIB-200** — topik 7 kategori, paralel `id`/`jv`/`sun`/`eng` (HF `Davlan/sib200`,
+  config `ind_Latn`/`jav_Latn`/`sun_Latn`/`eng_Latn`, ~800 train + 204 test per bahasa, CC-BY)
+- **IndoNLU** (opsional otomatis) — `emot`/`smsa`/`casa` bahasa Indonesia; loader lama
+  butuh `datasets<3.0`, bila tidak kompatibel dilewati lembut dengan peringatan
+- **CS sintetis** — pasangan kalimat SIB se-kategori dicampur setengah-setengah (eval saja)
+- **Replay v1** — seluruh `train_items.pt` (43k item) ikut dilatih ulang
+
+```bash
+python scripts/15_build_general.py --replay data/processed/train_items.pt
+# output: train_items_general.pt + test_sets_general.pt (set baru)
+#         + test_sets_v4.pt (gabungan 15 set lama + set baru, untuk 05_eval satu jalan)
+
+python scripts/04_train.py --model <dir-checkpoint-v1> \
+    --data data/processed/train_items_general.pt \
+    --out runs/laya-idjvsuen-v4 --model-name laya-idjvsuen-v4-general \
+    --amp fp16 --optim adamw8bit --micro-batch 8 --grad-accum 8 --epochs 2
+
+python scripts/05_eval.py --model runs/laya-idjvsuen-v4 \
+    --test-sets data/processed/test_sets_v4.pt --amp fp16 --tag v4-general
+```
+
+Jalur **Google Colab T4** siap-jalan (fp16 + GradScaler — T4 tidak punya bf16; checkpoint
+per epoch ke Google Drive; `--resume` aman dari disconnect):
+[`notebooks/colab_v4_general.ipynb`](../notebooks/colab_v4_general.ipynb).
+
+Alternatif data bila ingin volume lebih besar atau tanpa SIB-200: lihat menu sumber di
+[RISET-JEV.md](RISET-JEV.md) bagian 8 (Open-Jev untuk sisi en-general — legal karena
+dataset publik, bukan output API; NusaCrowd untuk tugas bahasa daerah lain).

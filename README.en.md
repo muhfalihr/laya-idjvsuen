@@ -81,6 +81,10 @@ python scripts/07_publish_hf.py --repo-id faall7479/laya-idjvsuen-v3  # publish 
 Stage 2 (optional) — internal ticket-domain adaptation (scripts 08-12, data pulled from
 internal databases via `secrets/db.ini`): see [docs/PIPELINE.en.md](docs/PIPELINE.en.md).
 
+Stage 3 (optional) — **v4** generalization from v1, outside the ticket domain (SIB-200
+topics in id/jv/su/en + IndoNLU + replay): run `python scripts/15_build_general.py`, then
+train on a Colab T4 via [notebooks/colab_v4_general.ipynb](notebooks/colab_v4_general.ipynb).
+
 ## Full documentation
 
 Everything detailed lives in [`docs/`](docs/), available in both languages (id + en):

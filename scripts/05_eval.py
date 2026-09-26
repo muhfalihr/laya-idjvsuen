@@ -48,6 +48,8 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--model", default="convaiinnovations/laya-multilingual")
     p.add_argument("--test-sets", default=os.path.join(ROOT, "data", "processed", "test_sets.pt"))
+    p.add_argument("--amp", choices=["bf16", "fp16"], default="bf16",
+                   help="fp16 untuk GPU tanpa bf16 (mis. T4 Colab)")
     p.add_argument("--batch-size", type=int, default=16)
     p.add_argument("--tag", default="eval")
     args = p.parse_args()
@@ -92,7 +94,8 @@ def main():
                     att[j, : len(it["ids"])] = 1
                     mpos[j, : len(it["markers"])] = torch.tensor(it["markers"])
                     mmask[j, : len(it["markers"])] = True
-                with torch.autocast(device_type=device.type, dtype=torch.bfloat16,
+                with torch.autocast(device_type=device.type,
+                                    dtype=torch.bfloat16 if args.amp == "bf16" else torch.float16,
                                     enabled=device.type == "cuda"):
                     logits, _ = model(ids.to(device), att.to(device), mpos.to(device),
                                       mmask.to(device),

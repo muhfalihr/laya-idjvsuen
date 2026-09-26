@@ -126,3 +126,38 @@ r = agent.predict("Waktune sindur enak banget", {
   (`convaiinnovations/laya-multilingual`, encoder `jhu-clsp/mmBERT-base`).
 - VRAM: full fine-tune of 322M ≈ 6-6.5 GB (fp32 master + AdamW + bf16 grad-ckpt activations).
   If OOM: `--micro-batch 4` or `--optim adamw8bit`.
+
+## Stage 3 (optional) — v4 generalization: fine-tune from v1 outside the ticket domain
+
+Widens the model's **general** capability (does not replace v3 for ticket routing), while
+replaying v1 data so MASSIVE/NusaX/code-switch skills are not forgotten:
+
+- **SIB-200** — 7-topic classification, parallel `id`/`jv`/`sun`/`eng` (HF `Davlan/sib200`,
+  configs `ind_Latn`/`jav_Latn`/`sun_Latn`/`eng_Latn`, ~800 train + 204 test per language,
+  CC-BY)
+- **IndoNLU** (automatic, optional) — `emot`/`smsa`/`casa` for Indonesian; the legacy
+  loader needs `datasets<3.0`; skipped softly with a warning if incompatible
+- **Synthetic CS** — same-category SIB sentence pairs mixed half-and-half (eval only)
+- **v1 replay** — the full `train_items.pt` (43k items) is retrained together
+
+```bash
+python scripts/15_build_general.py --replay data/processed/train_items.pt
+# outputs: train_items_general.pt + test_sets_general.pt (new sets)
+#          + test_sets_v4.pt (15 old sets + new, for one-shot 05_eval)
+
+python scripts/04_train.py --model <v1-checkpoint-dir> \
+    --data data/processed/train_items_general.pt \
+    --out runs/laya-idjvsuen-v4 --model-name laya-idjvsuen-v4-general \
+    --amp fp16 --optim adamw8bit --micro-batch 8 --grad-accum 8 --epochs 2
+
+python scripts/05_eval.py --model runs/laya-idjvsuen-v4 \
+    --test-sets data/processed/test_sets_v4.pt --amp fp16 --tag v4-general
+```
+
+A ready-to-run **Google Colab T4** path (fp16 + GradScaler — T4 has no bf16; per-epoch
+checkpoints to Google Drive; `--resume` survives disconnects):
+[`notebooks/colab_v4_general.ipynb`](../notebooks/colab_v4_general.ipynb).
+
+Alternative data sources for more volume or without SIB-200: see the menu in
+[RISET-JEV.en.md](RISET-JEV.en.md) section 8 (Open-Jev for the en-general side — legal
+because it is a public dataset, not API output; NusaCrowd for other regional-language tasks).

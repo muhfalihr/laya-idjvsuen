@@ -81,6 +81,10 @@ python scripts/07_publish_hf.py --repo-id faall7479/laya-idjvsuen-v3  # publikas
 Tahap 2 (opsional) — adaptasi domain tiket internal (skrip 08–12, data dari database
 internal via `secrets/db.ini`): lihat [docs/PIPELINE.md](docs/PIPELINE.md).
 
+Tahap 3 (opsional) — generalisasi **v4** dari v1 di luar domain tiket (SIB-200 topik
+id/jv/su/en + IndoNLU + replay): `python scripts/15_build_general.py`, lalu training di
+Colab T4 via [notebooks/colab_v4_general.ipynb](notebooks/colab_v4_general.ipynb).
+
 ## Dokumentasi lengkap
 
 Semua detail ada di [`docs/`](docs/), tersedia dalam dua bahasa (id + en):
