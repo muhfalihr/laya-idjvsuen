@@ -18,6 +18,7 @@ untuk input **Bahasa Indonesia, Jawa, Sunda, Inggris, dan campurannya (code-swit
 | **v1** | multibahasa umum: intent MASSIVE 60-kelas + sentimen NusaX (id/jv/su/en + CS) | [faall7479/laya-idjvsuen-v1](https://huggingface.co/faall7479/laya-idjvsuen-v1) | `runs/laya-idjvsuen-v1` |
 | v2 | v1 + domain tiket versi awal (digantikan v3; tidak dipublish) | — | `runs/laya-idjvsuen-v2` |
 | **v3** | v1 + domain tiket 12 kategori (kelas langka dikuatkan) — **disarankan untuk routing tiket** | [faall7479/laya-idjvsuen-v3](https://huggingface.co/faall7479/laya-idjvsuen-v3) | `runs/laya-idjvsuen-v3` |
+| **v4** | generalisasi dari v1: + topik SIB-200 (id/jv/su/en) + IndoNLU, replay penuh tanpa regresi — **disarankan untuk klasifikasi umum** | [faall7479/laya-idjvsuen-v4](https://huggingface.co/faall7479/laya-idjvsuen-v4) | `runs/laya-idjvsuen-v4` |
 
 *Konvensi: setiap ada versi model baru, tabel ini dan dokumentasi di `docs/` diperbarui.*
 

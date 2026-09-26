@@ -34,6 +34,7 @@ pada input **Bahasa Indonesia (id), Jawa (jv), Sunda (su), Inggris (en), dan cam
 |---|---|---|
 | **laya-idjvsuen-v1** | multibahasa umum (repo ini) | repo ini |
 | laya-idjvsuen-v3 | v1 + 12 kategori tiket (disarankan untuk routing tiket) | [faall7479/laya-idjvsuen-v3](https://huggingface.co/faall7479/laya-idjvsuen-v3) |
+| laya-idjvsuen-v4 | generalisasi dari v1: + topik SIB-200 + IndoNLU (disarankan untuk klasifikasi umum) | [faall7479/laya-idjvsuen-v4](https://huggingface.co/faall7479/laya-idjvsuen-v4) |
 
 Ini adalah *decision model* non-autoregressive berbasis encoder (mmBERT-base, 322M parameter):
 satu forward pass menghasilkan jawaban terketik + probabilitas terkalibrasi. **Model ini tidak

@@ -34,6 +34,7 @@ Sundanese (su), English (en), and code-switched** input.
 |---|---|---|
 | **laya-idjvsuen-v1** | general multilingual (this repo) | this repo |
 | laya-idjvsuen-v3 | v1 + 12-category ticket domain (recommended for ticket routing) | [faall7479/laya-idjvsuen-v3](https://huggingface.co/faall7479/laya-idjvsuen-v3) |
+| laya-idjvsuen-v4 | generalization from v1: + SIB-200 topics + IndoNLU (recommended for general classification) | [faall7479/laya-idjvsuen-v4](https://huggingface.co/faall7479/laya-idjvsuen-v4) |
 
 This is a non-autoregressive encoder-based decision model (mmBERT-base, 322M parameters):
 a single forward pass returns a typed answer plus a calibrated probability. **The model never

@@ -18,6 +18,7 @@ well on **Indonesian, Javanese, Sundanese, English, and mixed (code-switched) in
 | **v1** | general multilingual: MASSIVE 60-class intent + NusaX sentiment (id/jv/su/en + CS) | [faall7479/laya-idjvsuen-v1](https://huggingface.co/faall7479/laya-idjvsuen-v1) | `runs/laya-idjvsuen-v1` |
 | v2 | v1 + early ticket-domain version (superseded by v3; not published) | — | `runs/laya-idjvsuen-v2` |
 | **v3** | v1 + 12-category ticket domain (rare-class boosted) — **recommended for ticket routing** | [faall7479/laya-idjvsuen-v3](https://huggingface.co/faall7479/laya-idjvsuen-v3) | `runs/laya-idjvsuen-v3` |
+| **v4** | generalization from v1: + SIB-200 topics (id/jv/su/en) + IndoNLU, full replay with no regression — **recommended for general classification** | [faall7479/laya-idjvsuen-v4](https://huggingface.co/faall7479/laya-idjvsuen-v4) | `runs/laya-idjvsuen-v4` |
 
 *Convention: whenever a new model version is produced, this table and the `docs/` documentation are updated.*
 

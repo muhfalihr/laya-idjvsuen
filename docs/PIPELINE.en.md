@@ -154,6 +154,12 @@ python scripts/05_eval.py --model runs/laya-idjvsuen-v4 \
     --test-sets data/processed/test_sets_v4.pt --amp fp16 --tag v4-general
 ```
 
+**v4 PUBLISHED 2026-09-26**: [faall7479/laya-idjvsuen-v4](https://huggingface.co/faall7479/laya-idjvsuen-v4) —
+SIB-200 topics id 87.3% / jv 84.3% / su 79.9% / en 89.2% (v1: 66–78%), topic CS 88–92%,
+and every v1 skill improved with no regression (id sentiment +8 points via IndoNLU transfer).
+Full results: [results/eval_v4-general.json](results/eval_v4-general.json) vs
+[results/eval_v1-on-v4sets.json](results/eval_v1-on-v4sets.json); card: [MODEL-CARD-V4.en.md](MODEL-CARD-V4.en.md).
+
 A ready-to-run **Google Colab T4** path (fp16 + GradScaler — T4 has no bf16; per-epoch
 checkpoints to Google Drive; `--resume` survives disconnects):
 [`notebooks/colab_v4_general.ipynb`](../notebooks/colab_v4_general.ipynb).

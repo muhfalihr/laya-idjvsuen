@@ -36,6 +36,7 @@ input — extended with an **internal ticket-domain 12-category intent** task.
 |---|---|---|
 | laya-idjvsuen-v1 | general multilingual (MASSIVE intent 60-class + NusaX sentiment) | [faall7479/laya-idjvsuen-v1](https://huggingface.co/faall7479/laya-idjvsuen-v1) |
 | **laya-idjvsuen-v3** | v1 **+ ticket-domain 12 categories** (recommended for ticket routing) | this repo |
+| laya-idjvsuen-v4 | generalization from v1: + SIB-200 topics + IndoNLU (recommended for general classification) | [faall7479/laya-idjvsuen-v4](https://huggingface.co/faall7479/laya-idjvsuen-v4) |
 
 **The model never generates text** — it answers caller-defined typed questions
 (choice/score/noul) with calibrated probabilities in a single forward pass. It builds on the

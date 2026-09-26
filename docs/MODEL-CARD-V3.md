@@ -36,6 +36,7 @@ diperluas dengan tugas **intent 12 kategori domain tiket internal**.
 |---|---|---|
 | laya-idjvsuen-v1 | multibahasa umum (intent MASSIVE 60-kelas + sentimen NusaX) | [faall7479/laya-idjvsuen-v1](https://huggingface.co/faall7479/laya-idjvsuen-v1) |
 | **laya-idjvsuen-v3** | v1 **+ 12 kategori tiket** (disarankan untuk routing tiket) | repo ini |
+| laya-idjvsuen-v4 | generalisasi dari v1: + topik SIB-200 + IndoNLU (disarankan untuk klasifikasi umum) | [faall7479/laya-idjvsuen-v4](https://huggingface.co/faall7479/laya-idjvsuen-v4) |
 
 **Model ini tidak menghasilkan teks** — ia menjawab pertanyaan bertipe yang didefinisikan
 pemanggil (choice/score/noul) dengan probabilitas terkalibrasi dalam satu forward pass.
