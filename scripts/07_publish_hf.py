@@ -25,6 +25,9 @@ def main():
     p.add_argument("--model-dir", default=os.path.join(ROOT, "runs", "laya-idjvsuen-v1"))
     p.add_argument("--lang", choices=["en", "id"], default="en",
                    help="bahasa model card yang diunggah sebagai README repo (default: en)")
+    p.add_argument("--card", default=None,
+                   help="path model card khusus (mis. docs/MODEL-CARD-V4.md); "
+                        "default: card bahasa --lang (MODEL-CARD)")
     p.add_argument("--private", action="store_true", help="buat repo privat (bisa diubah nanti)")
     args = p.parse_args()
 
@@ -49,7 +52,10 @@ def main():
     )
 
     # model card -> README.md repo, dengan placeholder repo-id diganti otomatis
-    card = open(CARDS[args.lang], encoding="utf-8").read()
+    card_path = args.card if args.card else CARDS[args.lang]
+    if not os.path.exists(card_path):
+        sys.exit(f"model card tidak ditemukan: {card_path}")
+    card = open(card_path, encoding="utf-8").read()
     namespace = args.repo_id.split("/")[0]
     card = (card
             .replace("<repo-id-ini>", args.repo_id)

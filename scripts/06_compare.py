@@ -57,7 +57,9 @@ def build(base, ft, lang, idx):
     hf_map = {"runs/laya-idjvsuen-v1": "faall7479/laya-idjvsuen-v1",
               "runs\\laya-idjvsuen-v1": "faall7479/laya-idjvsuen-v1",
               "runs/laya-idjvsuen-v3": "faall7479/laya-idjvsuen-v3",
-              "runs\\laya-idjvsuen-v3": "faall7479/laya-idjvsuen-v3"}
+              "runs\\laya-idjvsuen-v3": "faall7479/laya-idjvsuen-v3",
+              "runs/laya-idjvsuen-v4": "faall7479/laya-idjvsuen-v4",
+              "runs\\laya-idjvsuen-v4": "faall7479/laya-idjvsuen-v4"}
     ft_model = ft.get("_summary", {}).get("model", "faall7479/laya-idjvsuen-v1")
     lines = [t["title"], "", t["lang_switch"], "",
              f"- {t['base']}: `{base.get('_summary', {}).get('model', 'laya-multilingual')}`",
