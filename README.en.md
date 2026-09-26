@@ -88,6 +88,7 @@ Everything detailed lives in [`docs/`](docs/), available in both languages (id +
 | Document | Indonesia | English |
 |---|---|---|
 | Deep research | [RISET-LAYA.md](docs/RISET-LAYA.md) | [RISET-LAYA.en.md](docs/RISET-LAYA.en.md) |
+| Jev (TypeSafe) research + gap analysis | [RISET-JEV.md](docs/RISET-JEV.md) | [RISET-JEV.en.md](docs/RISET-JEV.en.md) |
 | Pipeline guide | [PIPELINE.md](docs/PIPELINE.md) | [PIPELINE.en.md](docs/PIPELINE.en.md) |
 | Results & evaluation | [HASIL-RETRAINING.md](docs/HASIL-RETRAINING.md) | [HASIL-RETRAINING.en.md](docs/HASIL-RETRAINING.en.md) |
 | HF model card | [MODEL-CARD.md](docs/MODEL-CARD.md) | [MODEL-CARD.en.md](docs/MODEL-CARD.en.md) |

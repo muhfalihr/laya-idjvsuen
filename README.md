@@ -88,6 +88,7 @@ Semua detail ada di [`docs/`](docs/), tersedia dalam dua bahasa (id + en):
 | Dokumen | Indonesia | English |
 |---|---|---|
 | Riset mendalam | [RISET-LAYA.md](docs/RISET-LAYA.md) | [RISET-LAYA.en.md](docs/RISET-LAYA.en.md) |
+| Riset Jev (TypeSafe) + analisis gap | [RISET-JEV.md](docs/RISET-JEV.md) | [RISET-JEV.en.md](docs/RISET-JEV.en.md) |
 | Dokumentasi pipeline | [PIPELINE.md](docs/PIPELINE.md) | [PIPELINE.en.md](docs/PIPELINE.en.md) |
 | Hasil & evaluasi | [HASIL-RETRAINING.md](docs/HASIL-RETRAINING.md) | [HASIL-RETRAINING.en.md](docs/HASIL-RETRAINING.en.md) |
 | Model card HuggingFace | [MODEL-CARD.md](docs/MODEL-CARD.md) | [MODEL-CARD.en.md](docs/MODEL-CARD.en.md) |
